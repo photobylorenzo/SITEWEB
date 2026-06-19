@@ -221,46 +221,33 @@
             return new Date(year, month - 1, day);
         }
 
-        async function scanFolder(folder) {
-            const images = [];
-            const folderUrl = `img/${folder}/`;
-            try {
-                const response = await fetch(folderUrl);
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const links = Array.from(doc.querySelectorAll('a'));
-                
-                links.forEach(link => {
-                    let href = link.getAttribute('href');
-                    if (!href) return;
-                    href = href.split('?')[0];
-                    if (href.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
-                        let finalUrl = "";
-                        if (href.startsWith('/')) finalUrl = href;
-                        else if (href.includes(folder + '/')) finalUrl = `img/${href.replace('img/', '')}`;
-                        else finalUrl = folderUrl + href;
-                        images.push(finalUrl);
-                    }
-                });
-            } catch (e) { console.error("Erreur scan dossier " + folder, e); }
-            return images;
+
+
+        function resolveAlbumImages(albumId) {
+            const album = config.albums[albumId];
+            if (!album) return [];
+            const imgs = Array.isArray(album.images) ? album.images : [];
+            return imgs.map((p) => {
+                if (typeof p !== 'string') return p;
+                if (p.startsWith('http://') || p.startsWith('https://') || p.startsWith('img/') || p.startsWith('/')) return p;
+                return `img/${album.folder}/${p}`;
+            });
         }
 
         async function loadSite() {
             try {
                 const response = await fetch('config.json');
                 config = await response.json();
-                const discoveryPromises = Object.keys(config.albums).map(async (id) => {
-                    const imgs = await scanFolder(config.albums[id].folder);
-                    albumImages[id] = imgs;
+                albumImages = {};
+                Object.keys(config.albums).forEach((id) => {
+                    albumImages[id] = resolveAlbumImages(id);
                 });
-                await Promise.all(discoveryPromises);
                 setupGallery();
                 setupMarquee();
                 renderCalendar();
             } catch (e) { console.error("Erreur config.json", e); }
         }
+
 
         function setupGallery() {
             const grid = document.getElementById('albumsGrid');
@@ -406,5 +393,5 @@
         window.onclick = (e) => { if (e.target == document.getElementById('albumModal')) closeAlbum(); }
         loadSite();
     </script>
-</body
+</body>
 </html>
