@@ -37,7 +37,6 @@
         .carousel-container { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1200px; }
         .carousel-img { max-height: 70vh; max-width: 90vw; object-fit: contain; border-radius: 10px; animation: fadeIn 0.3s ease; cursor: grab; }
         .carousel-img:active { cursor: grabbing; }
-        
         .nav-arrow { 
             position: absolute; 
             top: 50%; 
@@ -53,14 +52,13 @@
             font-size: 1.5rem; 
             cursor: pointer; 
             transition: all 0.3s; 
-            z-index: 200; /* Très haut pour être sûr */
+            z-index: 200; 
             border: 1px solid rgba(255,255,255,0.3);
             outline: none;
         }
         .nav-arrow:hover { background: #2067E9; scale: 1.1; }
         .arrow-left { left: 15px; }
         .arrow-right { right: 15px; }
-
         .modal-info { position: absolute; bottom: 20px; left: 0; right: 0; background: rgba(20, 27, 45, 0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; margin: 0 20px; pointer-events: auto; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .btn-more { border: 1px solid #334155; padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
@@ -185,7 +183,6 @@
     <div id="albumModal" class="modal">
         <button onclick="closeAlbum()" class="absolute top-5 right-5 text-white text-5xl hover:text-blue-500 transition z-[210]">&times;</button>
         <div class="carousel-container">
-            <!-- UTILISATION DE BALISES BUTTON POUR LA FIABILITÉ -->
             <button onclick="prevImg()" class="nav-arrow arrow-left"><i class="fa-solid fa-chevron-left"></i></button>
             <img id="carouselImg" src="" class="carousel-img">
             <button onclick="nextImg()" class="nav-arrow arrow-right"><i class="fa-solid fa-chevron-right"></i></button>
@@ -340,13 +337,36 @@
             document.getElementById('albumModal').style.display = 'flex';
         }
 
+        // NOUVELLE LOGIQUE : Trouver l'album et la position de la photo
         function openSinglePhoto(src) {
-            currentAlbumImgs = [src];
-            currentIndex = 0;
-            document.getElementById('modalTitle').innerText = "Photo Unique";
-            document.getElementById('modalDesc').innerText = "Vue rapide du bandeau";
-            updateCarousel();
-            document.getElementById('albumModal').style.display = 'flex';
+            let foundAlbumId = null;
+            let imageIndex = 0;
+
+            // On cherche dans quel album se trouve cette URL d'image
+            for (const id in albumImages) {
+                const index = albumImages[id].indexOf(src);
+                if (index !== -1) {
+                    foundAlbumId = id;
+                    imageIndex = index;
+                    break;
+                }
+            }
+
+            if (foundAlbumId) {
+                // On ouvre l'album complet
+                openAlbum(foundAlbumId);
+                // Mais on saute directement à la photo cliquée
+                currentIndex = imageIndex;
+                updateCarousel();
+            } else {
+                // Fallback si l'image n'est pas dans un album connu
+                currentAlbumImgs = [src];
+                currentIndex = 0;
+                document.getElementById('modalTitle').innerText = "Photo Unique";
+                document.getElementById('modalDesc').innerText = "Vue rapide";
+                updateCarousel();
+                document.getElementById('albumModal').style.display = 'flex';
+            }
         }
 
         function closeAlbum() { document.getElementById('albumModal').style.display = 'none'; }
@@ -354,7 +374,6 @@
         function prevImg() { currentIndex = (currentIndex - 1 + currentAlbumImgs.length) % currentAlbumImgs.length; updateCarousel(); }
         function updateCarousel() { document.getElementById('carouselImg').src = currentAlbumImgs[currentIndex]; }
 
-        // --- AJOUT DU SWIPE POUR MOBILE ---
         let touchStartX = 0;
         let touchEndX = 0;
         const carouselImg = document.getElementById('carouselImg');
@@ -370,8 +389,8 @@
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            if (touchEndX < touchStartX - swipeThreshold) nextImg(); // Swipe gauche -> image suivante
-            if (touchEndX > touchStartX + swipeThreshold) prevImg(); // Swipe droite -> image précédente
+            if (touchEndX < touchStartX - swipeThreshold) nextImg(); 
+            if (touchEndX > touchStartX + swipeThreshold) prevImg();
         }
 
         async function downloadSingleImg() {
