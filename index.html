@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
-    <!-- ZIP LIBRARIES -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
@@ -16,7 +15,7 @@
         body { background-color: #0a0f1d; color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         .brand-blue-text { color: #2067E9; }
         .marquee-container { overflow: hidden; user-select: none; display: flex; gap: 20px; padding: 20px 0; }
-        .marquee-content { flex-shrink: 0; display: flex; justify-content: space-around; gap: 20px; min-width: 100%; animation: scroll 80s linear infinite; } /* RALENTI : 40s -> 80s */
+        .marquee-content { flex-shrink: 0; display: flex; justify-content: space-around; gap: 20px; min-width: 100%; animation: scroll 80s linear infinite; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(calc(-100% - 20px)); } }
         .marquee-content img { width: 300px; height: 500px; object-fit: cover; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
         .marquee-content img:hover { transform: scale(1.05); border-color: #2067E9; filter: brightness(1.2); }
@@ -34,18 +33,18 @@
         @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
         #dateJump { background: #1e293b; border: 1px solid #334155; color: white; padding: 8px 15px; border-radius: 10px; outline: none; cursor: pointer; transition: all 0.3s; }
         #dateJump:hover { border-color: #2067E9; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 100; flex-direction: column; justify-content: center; align-items: center; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 100; flex-direction: column; justify-content: center; align-items: center; touch-action: none; }
         .carousel-container { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 1200px; }
-        .carousel-img { max-height: 70vh; max-width: 90vw; object-fit: contain; border-radius: 10px; animation: fadeIn 0.3s ease; }
+        .carousel-img { max-height: 70vh; max-width: 90vw; object-fit: contain; border-radius: 10px; animation: fadeIn 0.3s ease; cursor: grab; }
+        .carousel-img:active { cursor: grabbing; }
         
-        /* NOUVELLES FLÈCHES MOBILE-FRIENDLY */
         .nav-arrow { 
             position: absolute; 
             top: 50%; 
             transform: translateY(-50%); 
             width: 50px; 
             height: 50px; 
-            background: rgba(255,255,255,0.1); 
+            background: rgba(32, 103, 233, 0.4); 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
@@ -54,14 +53,15 @@
             font-size: 1.5rem; 
             cursor: pointer; 
             transition: all 0.3s; 
-            z-index: 110; 
-            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 200; /* Très haut pour être sûr */
+            border: 1px solid rgba(255,255,255,0.3);
+            outline: none;
         }
-        .nav-arrow:hover { background: #2067E9; }
-        .arrow-left { left: 10px; }
-        .arrow-right { right: 10px; }
+        .nav-arrow:hover { background: #2067E9; scale: 1.1; }
+        .arrow-left { left: 15px; }
+        .arrow-right { right: 15px; }
 
-        .modal-info { position: absolute; bottom: 20px; left: 0; right: 0; background: rgba(20, 27, 45, 0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; margin: 0 20px; }
+        .modal-info { position: absolute; bottom: 20px; left: 0; right: 0; background: rgba(20, 27, 45, 0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); text-align: center; margin: 0 20px; pointer-events: auto; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .btn-more { border: 1px solid #334155; padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-more:hover { background: #2067E9; border-color: #2067E9; transform: translateX(5px); }
@@ -183,12 +183,12 @@
     </footer>
 
     <div id="albumModal" class="modal">
-        <button onclick="closeAlbum()" class="absolute top-5 right-5 text-white text-5xl hover:text-blue-500 transition z-[120]">&times;</button>
+        <button onclick="closeAlbum()" class="absolute top-5 right-5 text-white text-5xl hover:text-blue-500 transition z-[210]">&times;</button>
         <div class="carousel-container">
-            <!-- FLÈCHES À L'INTÉRIEUR -->
-            <div onclick="prevImg()" class="nav-arrow arrow-left"><i class="fa-solid fa-chevron-left"></i></div>
+            <!-- UTILISATION DE BALISES BUTTON POUR LA FIABILITÉ -->
+            <button onclick="prevImg()" class="nav-arrow arrow-left"><i class="fa-solid fa-chevron-left"></i></button>
             <img id="carouselImg" src="" class="carousel-img">
-            <div onclick="nextImg()" class="nav-arrow arrow-right"><i class="fa-solid fa-chevron-right"></i></div>
+            <button onclick="nextImg()" class="nav-arrow arrow-right"><i class="fa-solid fa-chevron-right"></i></button>
             
             <div class="modal-info">
                 <div class="flex justify-center gap-4 mb-4">
@@ -229,7 +229,6 @@
             try {
                 const response = await fetch('config.json');
                 config = await response.json();
-                
                 Object.keys(config.albums).forEach(id => {
                     const album = config.albums[id];
                     if (album.images && Array.isArray(album.images)) {
@@ -238,7 +237,6 @@
                         albumImages[id] = [];
                     }
                 });
-
                 setupGallery();
                 setupMarquee();
                 renderCalendar();
@@ -250,13 +248,11 @@
             const sortedIds = Object.keys(config.albums).sort((a, b) => {
                 return parseDate(config.albums[b].date) - parseDate(config.albums[a].date);
             });
-
             sortedIds.forEach((id, index) => {
                 const album = config.albums[id];
                 const isNew = index === 0;
                 const imgs = albumImages[id] || [];
                 const firstImg = imgs.length > 0 ? imgs[0] : 'img/logo.png';
-                
                 grid.innerHTML += `
                 <div class="card-bg rounded-3xl overflow-hidden group transition-all duration-500 hover:-translate-y-2 border border-transparent hover:border-blue-500/50 ${isNew ? 'album-new-glow' : ''}">
                     <div class="relative overflow-hidden h-72">
@@ -286,7 +282,6 @@
             const m2 = document.getElementById('marquee2');
             let allImgs = [];
             Object.keys(config.albums).forEach(id => allImgs.push(...(albumImages[id] || [])));
-            
             allImgs.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
@@ -358,6 +353,26 @@
         function nextImg() { currentIndex = (currentIndex + 1) % currentAlbumImgs.length; updateCarousel(); }
         function prevImg() { currentIndex = (currentIndex - 1 + currentAlbumImgs.length) % currentAlbumImgs.length; updateCarousel(); }
         function updateCarousel() { document.getElementById('carouselImg').src = currentAlbumImgs[currentIndex]; }
+
+        // --- AJOUT DU SWIPE POUR MOBILE ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carouselImg = document.getElementById('carouselImg');
+
+        carouselImg.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        carouselImg.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) nextImg(); // Swipe gauche -> image suivante
+            if (touchEndX > touchStartX + swipeThreshold) prevImg(); // Swipe droite -> image précédente
+        }
 
         async function downloadSingleImg() {
             const imgUrl = currentAlbumImgs[currentIndex];
