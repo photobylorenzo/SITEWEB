@@ -102,6 +102,7 @@
         <a href="https://www.paypal.com/paypalme/LorenzoMineo" class="brand-blue text-white px-6 py-3 rounded-full text-lg">Faire un don</a>
     </div>
 
+    <!-- Section Hero / Preview supprimée ici -->
 
     <section id="partners" class="max-w-7xl mx-auto px-6 py-24 border-t border-gray-900">
         <h2 class="text-4xl font-black mb-12 uppercase text-center">Mes <span class="brand-blue-text">Partenaires</span></h2>
@@ -231,12 +232,10 @@
 
         function setupGallery() {
             const grid = document.getElementById('albumsGrid');
-            // RETOUR AU TRI PAR DATE (Décroissant)
-            const sortedIds = Object.keys(config.albums).sort((a, b) => {
-                return parseDate(config.albums[b].date) - parseDate(config.albums[a].date);
-            });
+            // TRI ALÉATOIRE : On mélange les clés des albums
+            const shuffledIds = Object.keys(config.albums).sort(() => Math.random() - 0.5);
 
-            sortedIds.forEach((id) => {
+            shuffledIds.forEach((id) => {
                 const album = config.albums[id];
                 const imgs = albumImages[id] || [];
                 const firstImg = imgs.length > 0 ? imgs[0] : 'img/logo.png';
@@ -268,10 +267,6 @@
             const m2 = document.getElementById('marquee2');
             let allImgs = [];
             Object.keys(config.albums).forEach(id => allImgs.push(...(albumImages[id] || [])));
-            
-            // MELANGE ALÉATOIRE DES PHOTOS DU BANDEAU
-            allImgs.sort(() => Math.random() - 0.5);
-
             allImgs.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
