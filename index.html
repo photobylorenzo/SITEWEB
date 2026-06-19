@@ -102,17 +102,7 @@
         <a href="https://www.paypal.com/paypalme/LorenzoMineo" class="brand-blue text-white px-6 py-3 rounded-full text-lg">Faire un don</a>
     </div>
 
-    <section class="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e733b5?auto=format&fit=crop&w=1920&q=80" class="absolute inset-0 w-full h-full object-cover opacity-30">
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
-        <div class="relative z-10 text-center px-4">
-            <img src="img/logo.png" alt="Lorenzo" class="h-40 md:h-60 w-auto mx-auto mb-8 object-contain">
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8 italic">"Capturer l'invisible, figer l'éphémère."</p>
-            <a href="#gallery" class="brand-blue px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform inline-flex items-center gap-2">
-                Explorer mes albums <i class="fa-solid fa-arrow-down"></i>
-            </a>
-        </div>
-    </section>
+    <!-- Section Hero / Preview supprimée ici -->
 
     <section id="partners" class="max-w-7xl mx-auto px-6 py-24 border-t border-gray-900">
         <h2 class="text-4xl font-black mb-12 uppercase text-center">Mes <span class="brand-blue-text">Partenaires</span></h2>
@@ -242,18 +232,16 @@
 
         function setupGallery() {
             const grid = document.getElementById('albumsGrid');
-            const sortedIds = Object.keys(config.albums).sort((a, b) => {
-                return parseDate(config.albums[b].date) - parseDate(config.albums[a].date);
-            });
-            sortedIds.forEach((id, index) => {
+            // TRI ALÉATOIRE : On mélange les clés des albums
+            const shuffledIds = Object.keys(config.albums).sort(() => Math.random() - 0.5);
+
+            shuffledIds.forEach((id) => {
                 const album = config.albums[id];
-                const isNew = index === 0;
                 const imgs = albumImages[id] || [];
                 const firstImg = imgs.length > 0 ? imgs[0] : 'img/logo.png';
                 grid.innerHTML += `
-                <div class="card-bg rounded-3xl overflow-hidden group transition-all duration-500 hover:-translate-y-2 border border-transparent hover:border-blue-500/50 ${isNew ? 'album-new-glow' : ''}">
+                <div class="card-bg rounded-3xl overflow-hidden group transition-all duration-500 hover:-translate-y-2 border border-transparent hover:border-blue-500/50">
                     <div class="relative overflow-hidden h-72">
-                        ${isNew ? '<div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase z-10 shadow-lg animate-bounce">Nouveau</div>' : ''}
                         <img src="${firstImg}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                         <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button onclick="openAlbum('${id}')" class="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-blue-500 hover:text-white transition">Voir l'album</button>
@@ -337,12 +325,9 @@
             document.getElementById('albumModal').style.display = 'flex';
         }
 
-        // NOUVELLE LOGIQUE : Trouver l'album et la position de la photo
         function openSinglePhoto(src) {
             let foundAlbumId = null;
             let imageIndex = 0;
-
-            // On cherche dans quel album se trouve cette URL d'image
             for (const id in albumImages) {
                 const index = albumImages[id].indexOf(src);
                 if (index !== -1) {
@@ -351,15 +336,11 @@
                     break;
                 }
             }
-
             if (foundAlbumId) {
-                // On ouvre l'album complet
                 openAlbum(foundAlbumId);
-                // Mais on saute directement à la photo cliquée
                 currentIndex = imageIndex;
                 updateCarousel();
             } else {
-                // Fallback si l'image n'est pas dans un album connu
                 currentAlbumImgs = [src];
                 currentIndex = 0;
                 document.getElementById('modalTitle').innerText = "Photo Unique";
@@ -377,16 +358,11 @@
         let touchStartX = 0;
         let touchEndX = 0;
         const carouselImg = document.getElementById('carouselImg');
-
-        carouselImg.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
-
+        carouselImg.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
         carouselImg.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         }, false);
-
         function handleSwipe() {
             const swipeThreshold = 50;
             if (touchEndX < touchStartX - swipeThreshold) nextImg(); 
