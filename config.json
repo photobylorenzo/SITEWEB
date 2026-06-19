@@ -4,15 +4,15 @@
       "title": "Vaches aux ballots",
       "desc": "Evenement par le Comité des fêtes de Mouriès.",
       "date": "25/05/2026",
-      "folder": "vb2026"
+      "folder": "vb2026",
+      "images": ["1.png", "125652.png", "125732.png", "125827.png", "125912.png", "125942.png", "130048.png", "130120.png", "130158.png", "130244.png", "130308.png", "130354.png", "130436.png", "130529.png", "130556.png", "130641.png", "130706.png", "130726.png", "130749.png", "130825.png", "130850.png", "131000.png", "131020.png", "131043.png", "131123.png", "131152.png", "131216.png", "131259.png", "131348.png", "131413.png", "202702.png", "202756.png", "202932.png", "203103.png", "203133.png", "203235.png", "203313.png", "203339.png", "203403.png", "203428.png", "203456.png", "203520.png", "203551.png", "203617.png", "203658.png", "203725.png", "203755.png", "203821.png", "203942.png", "204005.png", "204031.png", "Capture d’écran 2026-05-25 130016.png", "IMG_0006.png", "IMG_0043.JPG", "IMG_0052.JPG", "IMG_0067.png", "IMG_0079.png", "IMG_0648.JPG"]
     },
     "album2": {
       "title": "Orphan's Days",
       "desc": "Evenement par le SIFFMC.",
       "date": "13/06/2026",
       "folder": "cd2026",
-      "images": []
+      "images": ["Capture d’écran 2026-06-13 190746.png", "Capture d’écran 2026-06-13 190847.png", "Capture d’écran 2026-06-13 190935.png", "Capture d’écran 2026-06-13 191006.png", "Capture d’écran 2026-06-13 191048.png", "Capture d’écran 2026-06-13 191246.png", "Capture d’écran 2026-06-13 213247.png"]
     }
   }
 }
-

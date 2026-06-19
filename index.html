@@ -43,8 +43,6 @@
         .btn-more:hover { background: #2067E9; border-color: #2067E9; transform: translateX(5px); }
         .glass { background: rgba(10, 15, 29, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.1); }
         .album-new-glow { border: 2px solid #2067E9 !important; box-shadow: 0 0 20px rgba(32, 103, 233, 0.3); }
-        
-        /* Style Menu Burger */
         #mobile-menu { transition: all 0.3s ease-in-out; transform: translateX(100%); }
         #mobile-menu.active { transform: translateX(0); }
     </style>
@@ -62,23 +60,18 @@
             <div class="flex items-center group cursor-pointer">
                 <img src="img/logo.png" alt="Logo" class="h-16 w-auto object-contain transition-transform group-hover:scale-110">
             </div>
-            
-            <!-- Menu Desktop -->
             <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400 items-center">
                 <a href="#gallery" class="hover:text-white transition">Portfolio</a>
                 <a href="#calendar" class="hover:text-white transition">Calendrier</a>
                 <a href="#partners" class="hover:text-white transition">Partenaires</a>
                 <a href="https://www.paypal.com/paypalme/LorenzoMineo" class="brand-blue text-white px-4 py-1 rounded-full hover:bg-blue-700 transition">Faire un don <i class="fa-brands fa-paypal"></i></a>
             </div>
-
-            <!-- Bouton Burger Mobile -->
             <button id="burger-btn" class="md:hidden text-white text-3xl focus:outline-none">
                 <i class="fa-solid fa-bars-staggered"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Menu Mobile Overlay -->
     <div id="mobile-menu" class="fixed inset-0 z-[60] bg-[#0a0f1d] flex flex-col items-center justify-center gap-8 text-2xl font-bold">
         <button id="close-menu" class="absolute top-5 right-5 text-4xl text-gray-400">&times;</button>
         <a href="#gallery" class="mobile-link hover:text-blue-500 transition">Portfolio</a>
@@ -99,28 +92,19 @@
         </div>
     </section>
 
-    <!-- SECTION PARTENAIRES STYLE CORPORATE -->
     <section id="partners" class="max-w-7xl mx-auto px-6 py-24 border-t border-gray-900">
         <h2 class="text-4xl font-black mb-12 uppercase text-center">Mes <span class="brand-blue-text">Partenaires</span></h2>
-        
-        <!-- Grille de logos : 2 colonnes sur mobile, 3 sur tablette, 6 sur desktop -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            
-            <!-- Partenaire 1 -->
-            <div class="card-bg  rounded-lg h-50 flex items-center justify-center p-4 group cursor-pointer transition-all duration-300 hover:border-blue-500/50">
+            <div class="card-bg rounded-lg h-50 flex items-center justify-center p-4 group cursor-pointer transition-all duration-300 hover:border-blue-500/50">
                 <img src="img/logo.png" alt="Photobylorenzo" class="max-h-full max-w-full object-contain filter opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
             </div>
-
-            <div class="card-bg  rounded-lg h-50 flex items-center justify-center p-4 group cursor-pointer transition-all duration-300 hover:border-blue-500/50">
+            <div class="card-bg rounded-lg h-50 flex items-center justify-center p-4 group cursor-pointer transition-all duration-300 hover:border-blue-500/50">
                 <img src="img/comité.png" alt="Comité des fêtes de Mouriès" class="max-h-full max-w-full object-contain filter opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
             </div>
-
-            <!-- Case Devenir Partenaire (Style différent pour attirer l'oeil) -->
             <a href="mailto:mineo.lorenzopro@gmail.com" class="brand-blue rounded-lg h-50 flex flex-col items-center justify-center p-4 text-center transition-all duration-300 hover:bg-blue-700 hover:scale-105 group">
                 <i class="fa-solid fa-plus text-white text-xl mb-2 group-hover:rotate-90 transition-transform"></i>
                 <span class="text-white text-[11px] font-bold uppercase leading-tight">Devenir<br>Partenaire</span>
             </a>
-
         </div>
     </section>
 
@@ -143,9 +127,6 @@
         <h2 class="text-4xl font-black mb-12 uppercase">Mes <span class="brand-blue-text">Collections</span></h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="albumsGrid"></div>
     </section>
-
-    <!-- NOUVELLE SECTION PARTENAIRES -->
-
 
     <section id="calendar" class="max-w-4xl mx-auto px-6 py-24 text-center">
         <h2 class="text-4xl font-black mb-2 uppercase">Archives <span class="brand-blue-text">Calendrier</span></h2>
@@ -204,12 +185,9 @@
 
         burgerBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
         closeMenu.addEventListener('click', () => mobileMenu.classList.remove('active'));
-        
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.remove('active'));
-        });
+        mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('active')));
 
-        // --- LOGIQUE EXISTANTE ---
+        // --- LOGIQUE DATA ---
         let config = {};
         let albumImages = {}; 
         let currentDate = new Date(); 
@@ -221,44 +199,39 @@
             return new Date(year, month - 1, day);
         }
 
-
-
-        function resolveAlbumImages(albumId) {
-            const album = config.albums[albumId];
-            if (!album) return [];
-            const imgs = Array.isArray(album.images) ? album.images : [];
-            return imgs.map((p) => {
-                if (typeof p !== 'string') return p;
-                if (p.startsWith('http://') || p.startsWith('https://') || p.startsWith('img/') || p.startsWith('/')) return p;
-                return `img/${album.folder}/${p}`;
-            });
-        }
-
         async function loadSite() {
             try {
                 const response = await fetch('config.json');
                 config = await response.json();
-                albumImages = {};
-                Object.keys(config.albums).forEach((id) => {
-                    albumImages[id] = resolveAlbumImages(id);
+                
+                // Création des chemins complets vers les images depuis le JSON
+                Object.keys(config.albums).forEach(id => {
+                    const album = config.albums[id];
+                    if (album.images && Array.isArray(album.images)) {
+                        albumImages[id] = album.images.map(imgName => `img/${album.folder}/${imgName}`);
+                    } else {
+                        albumImages[id] = [];
+                    }
                 });
+
                 setupGallery();
                 setupMarquee();
                 renderCalendar();
             } catch (e) { console.error("Erreur config.json", e); }
         }
 
-
         function setupGallery() {
             const grid = document.getElementById('albumsGrid');
             const sortedIds = Object.keys(config.albums).sort((a, b) => {
                 return parseDate(config.albums[b].date) - parseDate(config.albums[a].date);
             });
+
             sortedIds.forEach((id, index) => {
                 const album = config.albums[id];
                 const isNew = index === 0;
                 const imgs = albumImages[id] || [];
                 const firstImg = imgs.length > 0 ? imgs[0] : 'img/logo.png';
+                
                 grid.innerHTML += `
                 <div class="card-bg rounded-3xl overflow-hidden group transition-all duration-500 hover:-translate-y-2 border border-transparent hover:border-blue-500/50 ${isNew ? 'album-new-glow' : ''}">
                     <div class="relative overflow-hidden h-72">
@@ -288,6 +261,7 @@
             const m2 = document.getElementById('marquee2');
             let allImgs = [];
             Object.keys(config.albums).forEach(id => allImgs.push(...(albumImages[id] || [])));
+            
             allImgs.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
