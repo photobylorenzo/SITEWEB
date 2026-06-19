@@ -102,7 +102,17 @@
         <a href="https://www.paypal.com/paypalme/LorenzoMineo" class="brand-blue text-white px-6 py-3 rounded-full text-lg">Faire un don</a>
     </div>
 
-    <!-- Section Hero / Preview supprimée ici -->
+    <section class="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e733b5?auto=format&fit=crop&w=1920&q=80" class="absolute inset-0 w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
+        <div class="relative z-10 text-center px-4">
+            <img src="img/logo.png" alt="Lorenzo" class="h-40 md:h-60 w-auto mx-auto mb-8 object-contain">
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8 italic">"Capturer l'invisible, figer l'éphémère."</p>
+            <a href="#gallery" class="brand-blue px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform inline-flex items-center gap-2">
+                Explorer mes albums <i class="fa-solid fa-arrow-down"></i>
+            </a>
+        </div>
+    </section>
 
     <section id="partners" class="max-w-7xl mx-auto px-6 py-24 border-t border-gray-900">
         <h2 class="text-4xl font-black mb-12 uppercase text-center">Mes <span class="brand-blue-text">Partenaires</span></h2>
@@ -190,7 +200,6 @@
     </div>
 
     <script>
-        // --- GESTION MENU BURGER ---
         const burgerBtn = document.getElementById('burger-btn');
         const closeMenu = document.getElementById('close-menu');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -200,7 +209,6 @@
         closeMenu.addEventListener('click', () => mobileMenu.classList.remove('active'));
         mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('active')));
 
-        // --- LOGIQUE DATA ---
         let config = {};
         let albumImages = {}; 
         let currentDate = new Date(); 
@@ -232,10 +240,10 @@
 
         function setupGallery() {
             const grid = document.getElementById('albumsGrid');
-            // TRI ALÉATOIRE : On mélange les clés des albums
-            const shuffledIds = Object.keys(config.albums).sort(() => Math.random() - 0.5);
-
-            shuffledIds.forEach((id) => {
+            const sortedIds = Object.keys(config.albums).sort((a, b) => {
+                return parseDate(config.albums[b].date) - parseDate(config.albums[a].date);
+            });
+            sortedIds.forEach((id) => {
                 const album = config.albums[id];
                 const imgs = albumImages[id] || [];
                 const firstImg = imgs.length > 0 ? imgs[0] : 'img/logo.png';
@@ -267,6 +275,7 @@
             const m2 = document.getElementById('marquee2');
             let allImgs = [];
             Object.keys(config.albums).forEach(id => allImgs.push(...(albumImages[id] || [])));
+            allImgs.sort(() => Math.random() - 0.5);
             allImgs.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
